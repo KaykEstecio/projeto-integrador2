@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 2rem;">
+    <h1 class="animate-glow"
+        style="font-size: 3rem; color: var(--primary-color); text-transform: uppercase; letter-spacing: 5px;">Frota
+        Exclusiva</h1>
+    <p style="color: var(--accent-color); font-size: 1.2rem;">Escolha sua máquina para o futuro.</p>
+</div>
+
+<div class="carousel-container fade-in">
+    <div class="carousel-track">
+        {% for car in cars %}
+        <div class="car-card">
+            <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}" class="car-image">
+            <div class="car-info">
+                <h3>{{ car.brand }} {{ car.model }}</h3>
+                <p>R$ {{ car.price_per_day }} / dia</p>
+                <button class="btn" style="margin-top: 1rem; width: auto;">Alugar Agora</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <button class="carousel-btn prev-btn">&#10094;</button>
+    <button class="carousel-btn next-btn">&#10095;</button>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+{% endblock %}

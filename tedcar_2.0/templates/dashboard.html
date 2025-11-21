@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="color: var(--primary-color); margin-bottom: 1rem;">Painel de Controle</h2>
+<p>Bem-vindo, {{ current_user.username }}!</p>
+
+<div class="form-box" style="max-width: 100%; margin: 2rem 0;">
+    <h3>Adicionar Novo Veículo</h3>
+    <form method="POST" action="{{ url_for('add_car') }}"
+        style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
+        <div class="input-group" style="flex: 1; margin-bottom: 0;">
+            <label>Marca</label>
+            <input type="text" name="brand" required>
+        </div>
+        <div class="input-group" style="flex: 1; margin-bottom: 0;">
+            <label>Modelo</label>
+            <input type="text" name="model" required>
+        </div>
+        <div class="input-group" style="flex: 1; margin-bottom: 0;">
+            <label>Preço/Dia (R$)</label>
+            <input type="number" name="price" step="0.01" required>
+        </div>
+        <div class="input-group" style="flex: 1; margin-bottom: 0;">
+            <label>URL da Imagem</label>
+            <input type="text" name="image_url" placeholder="http://...">
+        </div>
+        <button type="submit" class="btn" style="width: auto;">Adicionar</button>
+    </form>
+</div>
+
+<h3 style="margin-top: 2rem;">Seus Veículos</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Imagem</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Preço/Dia</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for car in cars %}
+        <tr>
+            <td><img src="{{ car.image_url }}" alt="{{ car.model }}"
+                    style="width: 50px; height: 30px; object-fit: cover; border-radius: 3px;"></td>
+            <td>{{ car.brand }}</td>
+            <td>{{ car.model }}</td>
+            <td>R$ {{ car.price_per_day }}</td>
+            <td>
+                <a href="{{ url_for('delete_car', id=car.id) }}" class="btn btn-danger"
+                    style="padding: 0.3rem 0.8rem; font-size: 0.8rem; text-decoration: none;">Excluir</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align: center;">Nenhum veículo cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

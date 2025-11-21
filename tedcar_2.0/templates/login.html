@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="form-box animate-float">
+    <h2>Login</h2>
+    <form method="POST" action="{{ url_for('login') }}">
+        <div class="input-group">
+            <label for="username">Usuário</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="input-group">
+            <label for="password">Senha</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">Entrar</button>
+    </form>
+    <p style="margin-top: 1rem; text-align: center;">
+        Não tem conta? <a href="{{ url_for('register') }}" style="color: var(--primary-color);">Cadastre-se</a>
+    </p>
+</div>
+{% endblock %}
