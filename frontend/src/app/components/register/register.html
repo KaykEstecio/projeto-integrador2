@@ -1,0 +1,22 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Register</h2>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" formControlName="username" placeholder="Choose a username">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" formControlName="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" formControlName="password" placeholder="Choose a password">
+            </div>
+            <div class="error" *ngIf="error">{{ error }}</div>
+            <button type="submit" [disabled]="!registerForm.valid">Register</button>
+        </form>
+        <p>Already have an account? <a routerLink="/login">Login here</a></p>
+    </div>
+</div>

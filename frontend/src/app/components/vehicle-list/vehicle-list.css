@@ -1,0 +1,93 @@
+.list-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding: 4rem 0;
+    background: linear-gradient(180deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+h1 {
+    font-size: 3rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+p {
+    color: #aaa;
+    font-size: 1.2rem;
+}
+
+.vehicle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.vehicle-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
+    position: relative;
+}
+
+.vehicle-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: #00ffff;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+}
+
+.vehicle-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: #000;
+}
+
+.vehicle-info {
+    padding: 1.5rem;
+}
+
+.vehicle-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.price {
+    color: #00ffff;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.rent-btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    border: 1px solid #00ffff;
+    color: #00ffff;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.rent-btn:hover {
+    background: #00ffff;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
