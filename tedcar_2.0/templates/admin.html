@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Painel Admin</h2>
+
+<h3>Usuários</h3>
+<table border="1" cellpadding="6">
+    <tr><th>ID</th><th>Usuário</th><th>Admin?</th></tr>
+    {% for u in users %}
+    <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.username }}</td>
+        <td>{{ 'Sim' if u.is_admin else 'Não' }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Carros</h3>
+<table border="1" cellpadding="6">
+    <tr><th>ID</th><th>Marca</th><th>Modelo</th><th>Preço/Dia</th><th>Ações</th></tr>
+    {% for c in cars %}
+    <tr>
+        <td>{{ c.id }}</td>
+        <td>{{ c.brand }}</td>
+        <td>{{ c.model }}</td>
+        <td>{{ c.price_per_day }}</td>
+        <td><a href="/admin/delete_car/{{ c.id }}" onclick="return confirm('Remover este carro?')">Remover</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Reservas</h3>
+<table border="1" cellpadding="6">
+    <tr><th>ID</th><th>Carro ID</th><th>Usuário ID</th><th>Período</th><th>Total</th><th>Ações</th></tr>
+    {% for r in reservations %}
+    <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.car_id }}</td>
+        <td>{{ r.user_id }}</td>
+        <td>{{ r.start_date }} → {{ r.end_date }}</td>
+        <td>{{ r.total_price }}</td>
+        <td><a href="/admin/delete_reservation/{{ r.id }}" onclick="return confirm('Remover esta reserva?')">Remover</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -3,6 +3,9 @@ from flask import Flask, render_template, redirect, url_for, request, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
+from sqlalchemy import inspect, text
+import click
 
 
 app = Flask(__name__)
@@ -44,6 +47,18 @@ class Reservation(db.Model):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated:
+            return login_manager.unauthorized()
+        if not getattr(current_user, 'is_admin', False):
+            flash('Acesso negado: admin apenas.', 'error')
+            return redirect(url_for('dashboard'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 
@@ -101,13 +116,6 @@ def reserve(car_id):
 def car_details(id):
     car = Car.query.get_or_404(id)
     return render_template('cars.details.html', car=car)
-    
-
-@app.route('/my_reservations')
-@login_required
-def my_reservations():
-    my_res = Reservation.query.filter_by(user_id=current_user.id).all()
-    return render_template('my_reservations.html', reservations=my_res)
 
 
 @app.route('/contact')
@@ -124,7 +132,7 @@ def cancel_reservation(id):
     res = Reservation.query.get_or_404(id)
 
     # Garantir que o usuário só cancele as reservas dele
-    if res.user_id != current_user.id:
+    if res.user_id != current_user.id and not getattr(current_user, 'is_admin', False):
         flash("Você não tem permissão para cancelar esta reserva.", "error")
         return redirect(url_for('my_reservations'))
 
@@ -233,7 +241,7 @@ def add_car():
 @login_required
 def delete_car(id):
     car = Car.query.get_or_404(id)
-    if car.owner != current_user:
+    if car.owner != current_user and not getattr(current_user, 'is_admin', False):
         flash('Você não tem permissão para excluir este veículo.', 'error')
         return redirect(url_for('dashboard'))
     
@@ -241,6 +249,57 @@ def delete_car(id):
     db.session.commit()
     flash('Veículo removido.', 'success')
     return redirect(url_for('dashboard'))
+
+
+@app.route('/admin')
+@login_required
+@admin_required
+def admin_dashboard():
+    users = User.query.all()
+    cars = Car.query.all()
+    reservations = Reservation.query.all()
+    return render_template('admin.html', users=users, cars=cars, reservations=reservations)
+
+
+@app.route('/admin/delete_car/<int:id>')
+@login_required
+@admin_required
+def admin_delete_car(id):
+    car = Car.query.get_or_404(id)
+    db.session.delete(car)
+    db.session.commit()
+    flash('Veículo removido pelo admin.', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+
+@app.route('/admin/delete_reservation/<int:id>')
+@login_required
+@admin_required
+def admin_delete_reservation(id):
+    res = Reservation.query.get_or_404(id)
+    db.session.delete(res)
+    db.session.commit()
+    flash('Reserva removida pelo admin.', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+
+@app.cli.command('create-admin')
+@click.option('--username', prompt=True)
+@click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True)
+def create_admin(username, password):
+    """Cria ou atualiza um usuário como admin via Flask CLI."""
+    with app.app_context():
+        user = User.query.filter_by(username=username).first()
+        if user:
+            user.is_admin = True
+            user.password = generate_password_hash(password, method='pbkdf2:sha256')
+            db.session.commit()
+            print(f"Usuário '{username}' atualizado como admin.")
+        else:
+            new = User(username=username, password=generate_password_hash(password, method='pbkdf2:sha256'), is_admin=True)
+            db.session.add(new)
+            db.session.commit()
+            print(f"Usuário admin '{username}' criado com sucesso.")
 
 # --- Init DB ---
 def init_db():
@@ -261,6 +320,24 @@ def init_db():
                 db.session.add(new_car)
             db.session.commit()
             print("Banco de dados inicializado com carros padrão.")
+        # Garantir que a coluna `is_admin` exista (para bancos antigos)
+        try:
+            inspector = inspect(db.engine)
+            cols = [c['name'] for c in inspector.get_columns('user')]
+        except Exception:
+            cols = []
+
+        if 'is_admin' not in cols:
+            try:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN is_admin BOOLEAN DEFAULT 0"))
+                db.session.commit()
+                print("Coluna 'is_admin' adicionada à tabela 'user'.")
+            except Exception as e:
+                # Caso o ALTER TABLE falhe (por ex. permissões), apenas logue a exceção
+                print("Falha ao adicionar coluna is_admin:", e)
+
+        # Nota: criação automática de admin foi removida por segurança.
+        # Use o comando CLI `flask create-admin` ou o script `scripts/create_admin.py`.
 
 
 
