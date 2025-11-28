@@ -72,6 +72,29 @@ def index():
     return render_template('home.html', cars=cars)
 
 
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        message = request.form['message']
+
+        # Aqui você decide: salvar no banco ou só exibir mensagem
+        flash("Mensagem enviada com sucesso! Obrigado pelo contato.", "success")
+        return redirect(url_for('contact'))
+
+    return render_template('contact.html')
+
+
+
+
+
+
 
 @app.route('/reserve/<int:car_id>', methods=['GET', 'POST'])
 @login_required
@@ -118,13 +141,9 @@ def car_details(id):
     return render_template('cars.details.html', car=car)
 
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
 
-@app.route('/faq')
-def faq():
-    return render_template('faq.html')
+
+
 
 @app.route('/cancel_reservation/<int:id>')
 @login_required

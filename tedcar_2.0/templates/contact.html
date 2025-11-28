@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 style="margin-bottom: 20px;">Entre em Contato</h1>
+
+<div class="card" style="padding: 20px;">
+
+    <form method="POST" action="/contact">
+        <label>Seu nome:</label><br>
+        <input type="text" name="name" required class="form-input"><br><br>
+
+        <label>Seu e-mail:</label><br>
+        <input type="email" name="email" required class="form-input"><br><br>
+
+        <label>Mensagem:</label><br>
+        <textarea name="message" rows="5" required class="form-input"></textarea><br><br>
+
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+
+</div>
+
+{% endblock %}
