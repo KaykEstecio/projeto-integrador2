@@ -71,6 +71,13 @@ def index():
     cars = Car.query.all()
     return render_template('home.html', cars=cars)
 
+@app.route('/my_reservations')
+@login_required
+def my_reservations():
+    reservations = Reservation.query.filter_by(user_id=current_user.id).all()
+    return render_template('my_reservations.html', reservations=reservations)
+
+
 
 @app.route('/faq')
 def faq():
@@ -355,8 +362,7 @@ def init_db():
                 # Caso o ALTER TABLE falhe (por ex. permissões), apenas logue a exceção
                 print("Falha ao adicionar coluna is_admin:", e)
 
-        # Nota: criação automática de admin foi removida por segurança.
-        # Use o comando CLI `flask create-admin` ou o script `scripts/create_admin.py`.
+        
 
 
 
