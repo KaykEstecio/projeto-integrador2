@@ -33,6 +33,8 @@ class Car(db.Model):
     price_per_day = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(500), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True) # Nullable for system cars
+    
+
 
 class Reservation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +43,8 @@ class Reservation(db.Model):
     start_date = db.Column(db.String(20), nullable=False)
     end_date = db.Column(db.String(20), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    car = db.relationship('Car')
+
 
 
 # --- Loader ---

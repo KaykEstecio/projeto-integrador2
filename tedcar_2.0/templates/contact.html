@@ -1,23 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1 style="margin-bottom: 20px;">Entre em Contato</h1>
+<h1 style="color:var(--primary-color);">Contato</h1>
 
-<div class="card" style="padding: 20px;">
+<div style="max-width:700px; margin-top:12px;">
+    <div class="card">
+        <form method="POST" action="{{ url_for('contact') }}">
+            <div class="input-group">
+                <label>Nome</label>
+                <input type="text" name="name" required>
+            </div>
 
-    <form method="POST" action="/contact">
-        <label>Seu nome:</label><br>
-        <input type="text" name="name" required class="form-input"><br><br>
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" name="email" required>
+            </div>
 
-        <label>Seu e-mail:</label><br>
-        <input type="email" name="email" required class="form-input"><br><br>
+            <div class="input-group">
+                <label>Mensagem</label>
+                <textarea name="message" rows="5" style="width:100%; padding:10px; border-radius:8px;"></textarea>
+            </div>
 
-        <label>Mensagem:</label><br>
-        <textarea name="message" rows="5" required class="form-input"></textarea><br><br>
-
-        <button type="submit" class="btn btn-primary">Enviar</button>
-    </form>
-
+            <button class="btn" type="submit">Enviar mensagem</button>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

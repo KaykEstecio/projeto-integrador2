@@ -1,22 +1,21 @@
-<nav style="padding: 15px; background: #111; color: white; display: flex; justify-content: space-between; align-items: center;">
-    <div style="font-size: 22px; font-weight: bold;">TedCar</div>
+<nav>
+    <div class="logo">TedCar</div>
 
-    <div>
-        <a href="/" style="color: white; margin-right: 20px;">Início</a>
-        <a href="/cars" style="color: white; margin-right: 20px;">Carros</a>
-        <a href="/faq">FAQ</a>
-        <a href="/contact">Contato</a>
-
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}">Início</a>
+        <a href="{{ url_for('cars') }}">Carros</a>
+        <a href="{{ url_for('faq') }}">FAQ</a>
+        <a href="{{ url_for('contact') }}">Contato</a>
 
         {% if current_user.is_authenticated %}
+            <a href="{{ url_for('my_reservations') }}">Minhas Reservas</a>
             {% if current_user.is_admin %}
-                <a href="/admin" style="color: white; margin-right: 20px;">Admin</a>
+                <a href="{{ url_for('admin_dashboard') }}" style="color: var(--accent-color);">Admin</a>
             {% endif %}
-            <a href="/my_reservations" style="color: white; margin-right: 20px;">Minhas Reservas</a>
-            <a href="/logout" style="color: #ff5555;">Sair</a>
+            <a href="{{ url_for('logout') }}" style="color: #ff6b6b;">Sair</a>
         {% else %}
-            <a href="/login" style="color: white; margin-right: 20px;">Entrar</a>
-            <a href="/register" style="color: white;">Registrar</a>
+            <a href="{{ url_for('login') }}">Entrar</a>
+            <a href="{{ url_for('register') }}">Registrar</a>
         {% endif %}
     </div>
 </nav>

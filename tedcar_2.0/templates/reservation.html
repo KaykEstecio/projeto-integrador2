@@ -1,8 +1,10 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
 {% block content %}
-<h1>Reservar {{ car.brand }} {{ car.model }}</h1>
 
-<p>O processo de reserva deve ser feito na página do carro.</p>
-<p><a href="/car/{{ car.id }}">Clique aqui para voltar</a></p>
+<h1 style="color:var(--primary-color);">Confirmar Reserva</h1>
+
+<p>Se você abriu esta página sem preencher as datas, volte para a página do carro.</p>
+
+<a class="btn" href="{{ url_for('cars') }}">Voltar aos carros</a>
+
 {% endblock %}
