@@ -1,62 +1,70 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
+    <h2 class="mb-md">Nossos Veículos</h2>
 
-<h1>Carros Disponíveis</h1>
+    <div class="grid" style="grid-template-columns: 250px 1fr; gap: var(--spacing-xl);">
+        <!-- Sidebar Filters -->
+        <div class="card" style="height: fit-content;">
+            <div class="card-body">
+                <h3 class="card-title">Filtros</h3>
+                <form action="{{ url_for('cars') }}" method="GET">
+                    <div class="form-group">
+                        <label class="form-label">Marca</label>
+                        <select name="brand" class="form-control">
+                            <option value="Todas">Todas</option>
+                            {% for b in brands %}
+                            <option value="{{ b }}" {% if request.args.get('brand')==b %}selected{% endif %}>{{ b }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Preço Máximo</label>
+                        <input type="number" name="max_price" class="form-control" placeholder="Ex: 500"
+                            value="{{ request.args.get('max_price', '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ordenar por</label>
+                        <select name="order" class="form-control">
+                            <option value="">Padrão</option>
+                            <option value="menor_preco" {% if request.args.get('order')=='menor_preco' %}selected{%
+                                endif %}>Menor Preço</option>
+                            <option value="maior_preco" {% if request.args.get('order')=='maior_preco' %}selected{%
+                                endif %}>Maior Preço</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Filtrar</button>
+                    <a href="{{ url_for('cars') }}" class="btn btn-outline w-full mt-sm text-center">Limpar</a>
+                </form>
+            </div>
+        </div>
 
-<!-- Filtros -->
-<form method="GET" style="margin-bottom: 20px; display: flex; gap: 20px;">
-
-    <!-- Filtro de Marca -->
-    <div>
-        <label>Marca:</label>
-        <select name="brand">
-            <option value="Todas">Todas</option>
-            {% for b in brands %}
-            <option value="{{ b }}">{{ b }}</option>
-            {% endfor %}
-        </select>
+        <!-- Car Grid -->
+        <div>
+            <div class="grid grid-3">
+                {% for car in cars %}
+                <div class="card">
+                    <div style="height: 180px; overflow: hidden;">
+                        <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title" style="font-size: 1.1rem;">{{ car.brand }} {{ car.model }}</h3>
+                        <p class="card-text" style="color: var(--secondary-color); font-weight: 600;">
+                            R$ {{ car.price_per_day }} <span style="font-size: 0.8rem; color: var(--text-light);">/
+                                dia</span>
+                        </p>
+                        <a href="{{ url_for('car_details', id=car.id) }}"
+                            class="btn btn-primary w-full btn-sm">Detalhes</a>
+                    </div>
+                </div>
+                {% else %}
+                <p>Nenhum carro encontrado com esses filtros.</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
-
-    <!-- Filtro de Preço -->
-    <div>
-        <label>Preço máximo (R$ por dia):</label>
-        <input type="number" name="max_price" min="0" step="10">
-    </div>
-
-    <!-- Ordenação -->
-    <div>
-        <label>Ordenar:</label>
-        <select name="order">
-            <option value="">Padrão</option>
-            <option value="menor_preco">Menor preço</option>
-            <option value="maior_preco">Maior preço</option>
-        </select>
-    </div>
-
-    <button type="submit" style="padding: 5px 10px; background:#333; color:white;">Aplicar</button>
-
-</form>
-
-<!-- Cards de Carros -->
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    {% for car in cars %}
-    <div style="border: 1px solid #ddd; width: 250px; padding: 10px; border-radius: 8px;">
-        <img src="{{ car.image_url }}" width="100%" style="border-radius: 8px;">
-        
-        <h3>{{ car.brand }} {{ car.model }}</h3>
-        <p><strong>R$ {{ car.price_per_day }}</strong> / dia</p>
-
-        <a href="/car/{{ car.id }}" style="background: #111; color: white; padding: 8px 12px; display: inline-block; text-decoration: none;">
-            Ver detalhes
-        </a>
-    </div>
-    {% endfor %}
 </div>
-
 {% endblock %}
-
-
-
-
-

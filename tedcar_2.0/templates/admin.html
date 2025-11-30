@@ -1,45 +1,112 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
 {% block content %}
+<div class="container">
+  <h2 class="mb-lg">Painel Administrativo</h2>
 
-<h1 style="color:var(--primary-color);">Painel Administrativo</h1>
-
-<h2 style="margin-top:18px;">Carros</h2>
-<table>
-  <thead>
-    <tr><th>ID</th><th>Marca</th><th>Modelo</th><th>Preço</th><th>Ações</th></tr>
-  </thead>
-  <tbody>
-    {% for car in cars %}
-    <tr>
-      <td>{{ car.id }}</td>
-      <td>{{ car.brand }}</td>
-      <td>{{ car.model }}</td>
-      <td>R$ {{ car.price_per_day }}</td>
-      <td>
-        <a href="{{ url_for('delete_car', id=car.id) }}" style="color:#ff6b6b;">Apagar</a>
-      </td>
-    </tr>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-messages">
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
     {% endfor %}
-  </tbody>
-</table>
+  </div>
+  {% endif %}
+  {% endwith %}
 
-<h2 style="margin-top:22px;">Reservas</h2>
-<table>
-  <thead>
-    <tr><th>ID</th><th>Carro</th><th>Usuário</th><th>Início</th><th>Fim</th><th>Total</th></tr>
-  </thead>
-  <tbody>
-    {% for r in reservations %}
-    <tr>
-      <td>{{ r.id }}</td>
-      <td>{{ r.car_id }}</td>
-      <td>{{ r.user_id }}</td>
-      <td>{{ r.start_date }}</td>
-      <td>{{ r.end_date }}</td>
-      <td>R$ {{ r.total_price }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+  <div class="grid gap-lg">
+    <!-- Users -->
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Usuários</h3>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Admin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for user in users %}
+              <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ 'Sim' if user.is_admin else 'Não' }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
+    <!-- Cars -->
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Todos os Veículos</h3>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Veículo</th>
+                <th>Dono</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for car in cars %}
+              <tr>
+                <td>{{ car.id }}</td>
+                <td>{{ car.brand }} {{ car.model }}</td>
+                <td>{{ car.owner.username }}</td>
+                <td>
+                  <a href="{{ url_for('admin_delete_car', id=car.id) }}" class="btn btn-sm btn-danger"
+                    onclick="return confirm('Admin: Excluir?')">Excluir</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reservations -->
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Todas as Reservas</h3>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Carro</th>
+                <th>Usuário</th>
+                <th>Total</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for res in reservations %}
+              <tr>
+                <td>{{ res.id }}</td>
+                <td>{{ res.car.brand }} {{ res.car.model }}</td>
+                <td>{{ res.user_id }}</td> <!-- Idealmente mostrar username -->
+                <td>R$ {{ res.total_price }}</td>
+                <td>
+                  <a href="{{ url_for('admin_delete_reservation', id=res.id) }}" class="btn btn-sm btn-danger"
+                    onclick="return confirm('Admin: Excluir?')">Excluir</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

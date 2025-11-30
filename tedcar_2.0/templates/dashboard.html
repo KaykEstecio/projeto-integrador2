@@ -1,62 +1,80 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-<h2 style="color: var(--primary-color); margin-bottom: 1rem;">Painel de Controle</h2>
-<p>Bem-vindo, {{ current_user.username }}!</p>
+<div class="container">
+    <div class="flex justify-between items-center mb-md">
+        <h2>Meu Painel</h2>
+        <span class="text-light">Bem-vindo, {{ current_user.username }}</span>
+    </div>
 
-<div class="form-box" style="max-width: 100%; margin: 2rem 0;">
-    <h3>Adicionar Novo Veículo</h3>
-    <form method="POST" action="{{ url_for('add_car') }}"
-        style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: flex-end;">
-        <div class="input-group" style="flex: 1; margin-bottom: 0;">
-            <label>Marca</label>
-            <input type="text" name="brand" required>
-        </div>
-        <div class="input-group" style="flex: 1; margin-bottom: 0;">
-            <label>Modelo</label>
-            <input type="text" name="model" required>
-        </div>
-        <div class="input-group" style="flex: 1; margin-bottom: 0;">
-            <label>Preço/Dia (R$)</label>
-            <input type="number" name="price" step="0.01" required>
-        </div>
-        <div class="input-group" style="flex: 1; margin-bottom: 0;">
-            <label>URL da Imagem</label>
-            <input type="text" name="image_url" placeholder="http://...">
-        </div>
-        <button type="submit" class="btn" style="width: auto;">Adicionar</button>
-    </form>
-</div>
-
-<h3 style="margin-top: 2rem;">Seus Veículos</h3>
-<table>
-    <thead>
-        <tr>
-            <th>Imagem</th>
-            <th>Marca</th>
-            <th>Modelo</th>
-            <th>Preço/Dia</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for car in cars %}
-        <tr>
-            <td><img src="{{ car.image_url }}" alt="{{ car.model }}"
-                    style="width: 50px; height: 30px; object-fit: cover; border-radius: 3px;"></td>
-            <td>{{ car.brand }}</td>
-            <td>{{ car.model }}</td>
-            <td>R$ {{ car.price_per_day }}</td>
-            <td>
-                <a href="{{ url_for('delete_car', id=car.id) }}" class="btn btn-danger"
-                    style="padding: 0.3rem 0.8rem; font-size: 0.8rem; text-decoration: none;">Excluir</a>
-            </td>
-        </tr>
-        {% else %}
-        <tr>
-            <td colspan="5" style="text-align: center;">Nenhum veículo cadastrado.</td>
-        </tr>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
         {% endfor %}
-    </tbody>
-</table>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="grid grid-2">
+        <!-- Meus Carros -->
+        <div>
+            <h3>Meus Veículos Cadastrados</h3>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Veículo</th>
+                            <th>Preço/Dia</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for car in cars %}
+                        <tr>
+                            <td>{{ car.brand }} {{ car.model }}</td>
+                            <td>R$ {{ car.price_per_day }}</td>
+                            <td>
+                                <a href="{{ url_for('delete_car', id=car.id) }}" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Tem certeza?')">Excluir</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center">Nenhum veículo cadastrado.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Adicionar Carro -->
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Adicionar Novo Veículo</h3>
+                <form action="{{ url_for('add_car') }}" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Marca</label>
+                        <input type="text" name="brand" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Modelo</label>
+                        <input type="text" name="model" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Preço por Dia (R$)</label>
+                        <input type="number" step="0.01" name="price" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL da Imagem</label>
+                        <input type="text" name="image_url" class="form-control" placeholder="http://...">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Adicionar Veículo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

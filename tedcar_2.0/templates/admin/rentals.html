@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="grid" style="grid-template-columns: 250px 1fr; gap: var(--spacing-xl);">
+
+        <!-- Sidebar -->
+        <div class="card" style="height: fit-content;">
+            <div class="card-body">
+                <h3 class="card-title mb-md">Menu Admin</h3>
+                <nav style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline w-full text-left">Dashboard</a>
+                    <a href="{{ url_for('admin_cars') }}" class="btn btn-outline w-full text-left">Veículos</a>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-outline w-full text-left">Usuários</a>
+                    <a href="{{ url_for('admin_rentals') }}" class="btn btn-primary w-full text-left">Locações</a>
+                    <a href="{{ url_for('admin_logs') }}" class="btn btn-outline w-full text-left">Logs</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+            <h2 class="mb-md">Gestão de Locações</h2>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Veículo</th>
+                            <th>Período</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in reservations %}
+                        <tr>
+                            <td>{{ res.id }}</td>
+                            <td>{{ res.user.username }}</td>
+                            <td>{{ res.car.brand }} {{ res.car.model }}</td>
+                            <td>
+                                <div style="font-size: 0.9rem;">
+                                    {{ res.start_date }} <br> {{ res.end_date }}
+                                </div>
+                            </td>
+                            <td>R$ {{ res.total_price }}</td>
+                            <td>
+                                <span
+                                    style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;
+                                    background: {% if res.status == 'pending' %}#fef3c7{% elif res.status == 'active' %}#dbeafe{% elif res.status == 'completed' %}#dcfce7{% else %}#fee2e2{% endif %};
+                                    color: {% if res.status == 'pending' %}#b45309{% elif res.status == 'active' %}#1e40af{% elif res.status == 'completed' %}#166534{% else %}#991b1b{% endif %};">
+                                    {{ res.status|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="flex gap-sm">
+                                    {% if res.status == 'pending' %}
+                                    <a href="{{ url_for('admin_rental_action', id=res.id, action='approve') }}"
+                                        class="btn btn-sm btn-primary" title="Aprovar">✅</a>
+                                    <a href="{{ url_for('admin_rental_action', id=res.id, action='cancel') }}"
+                                        class="btn btn-sm btn-danger" title="Rejeitar">❌</a>
+                                    {% elif res.status == 'active' %}
+                                    <a href="{{ url_for('admin_rental_action', id=res.id, action='complete') }}"
+                                        class="btn btn-sm btn-outline" title="Finalizar">🏁</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,25 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Bem-vindo à TedCar</h1>
-    <p>Alugue carros de forma rápida, segura e confiável.</p>
+<div class="container">
+    <section class="section text-center">
+        <h1 style="font-size: 3rem; margin-bottom: var(--spacing-md);">Bem-vindo à <span
+                style="color: var(--secondary-color);">TedCar</span></h1>
+        <p style="font-size: 1.25rem; color: var(--text-light); max-width: 600px; margin: 0 auto var(--spacing-lg);">
+            Alugue carros de forma rápida, segura e confiável. A melhor experiência para sua viagem começa aqui.
+        </p>
+        <a href="{{ url_for('cars') }}" class="btn btn-primary btn-lg">Ver Carros Disponíveis</a>
+    </section>
 
-    <div style="margin-top:20px;">
-        <a href="/cars" style="padding: 10px 20px; background:#111; color:white; text-decoration:none;">
-            Ver Carros
-        </a>
-    </div>
+    <section class="section">
+        <div class="flex justify-between items-center mb-md">
+            <h2>Destaques</h2>
+            <a href="{{ url_for('cars') }}" class="btn btn-outline btn-sm">Ver Todos</a>
+        </div>
 
-    <h2 style="margin-top: 40px;">Destaques</h2>
-
-    <div style="display: flex; gap: 20px;">
-        {% for car in cars[:3] %}
-            <div style="border: 1px solid #ddd; width: 250px; padding: 10px;">
-                <img src="{{ car.image_url }}" width="100%">
-                <h3>{{ car.brand }} {{ car.model }}</h3>
-                <p>R$ {{ car.price_per_day }} / dia</p>
-                <a href="/car/{{ car.id }}">Ver detalhes</a>
+        <div class="grid grid-3">
+            {% for car in cars[:3] %}
+            <div class="card">
+                <div style="height: 200px; overflow: hidden;">
+                    <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">{{ car.brand }} {{ car.model }}</h3>
+                    <p class="card-text" style="font-size: 1.1rem; font-weight: 600; color: var(--secondary-color);">
+                        R$ {{ car.price_per_day }} <span
+                            style="font-size: 0.9rem; color: var(--text-light); font-weight: 400;">/ dia</span>
+                    </p>
+                    <a href="{{ url_for('car_details', id=car.id) }}" class="btn btn-primary w-full">Ver Detalhes</a>
+                </div>
             </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
 {% endblock %}

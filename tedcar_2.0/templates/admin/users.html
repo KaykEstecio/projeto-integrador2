@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="grid" style="grid-template-columns: 250px 1fr; gap: var(--spacing-xl);">
+
+        <!-- Sidebar -->
+        <div class="card" style="height: fit-content;">
+            <div class="card-body">
+                <h3 class="card-title mb-md">Menu Admin</h3>
+                <nav style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline w-full text-left">Dashboard</a>
+                    <a href="{{ url_for('admin_cars') }}" class="btn btn-outline w-full text-left">Veículos</a>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-primary w-full text-left">Usuários</a>
+                    <a href="{{ url_for('admin_rentals') }}" class="btn btn-outline w-full text-left">Locações</a>
+                    <a href="{{ url_for('admin_logs') }}" class="btn btn-outline w-full text-left">Logs</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+            <h2 class="mb-md">Gestão de Usuários</h2>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                <span style="color: var(--secondary-color); font-weight: bold;">Admin</span>
+                                {% else %}
+                                Cliente
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_blocked %}
+                                <span style="color: #ef4444; font-weight: bold;">Bloqueado</span>
+                                {% else %}
+                                <span style="color: #22c55e;">Ativo</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not user.is_admin %}
+                                <a href="{{ url_for('admin_toggle_block_user', id=user.id) }}"
+                                    class="btn btn-sm {% if user.is_blocked %}btn-primary{% else %}btn-danger{% endif %}">
+                                    {% if user.is_blocked %}Desbloquear{% else %}Bloquear{% endif %}
+                                </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

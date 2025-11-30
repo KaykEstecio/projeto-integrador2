@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="grid" style="grid-template-columns: 250px 1fr; gap: var(--spacing-xl);">
+
+        <!-- Sidebar -->
+        <div class="card" style="height: fit-content;">
+            <div class="card-body">
+                <h3 class="card-title mb-md">Menu Admin</h3>
+                <nav style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline w-full text-left">Dashboard</a>
+                    <a href="{{ url_for('admin_cars') }}" class="btn btn-primary w-full text-left">Veículos</a>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-outline w-full text-left">Usuários</a>
+                    <a href="{{ url_for('admin_rentals') }}" class="btn btn-outline w-full text-left">Locações</a>
+                    <a href="{{ url_for('admin_logs') }}" class="btn btn-outline w-full text-left">Logs</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+            <div class="flex justify-between items-center mb-md">
+                <h2 class="mb-0">Gestão de Veículos</h2>
+                <button onclick="document.getElementById('addCarForm').classList.toggle('hidden')"
+                    class="btn btn-primary">Novo Veículo</button>
+            </div>
+
+            <!-- Add Car Form (Hidden by default) -->
+            <div id="addCarForm" class="card mb-lg hidden">
+                <div class="card-body">
+                    <h3 class="card-title">Cadastrar Novo Veículo</h3>
+                    <form action="{{ url_for('admin_add_car') }}" method="POST" class="grid grid-2 gap-md">
+                        <div class="form-group">
+                            <label class="form-label">Marca</label>
+                            <input type="text" name="brand" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Modelo</label>
+                            <input type="text" name="model" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Placa</label>
+                            <input type="text" name="plate" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ano</label>
+                            <input type="number" name="year" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quilometragem</label>
+                            <input type="number" step="0.1" name="km" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Preço Diária (R$)</label>
+                            <input type="number" step="0.01" name="price" class="form-control" required>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label class="form-label">URL da Imagem</label>
+                            <input type="text" name="image_url" class="form-control" placeholder="https://...">
+                        </div>
+                        <div style="grid-column: span 2;">
+                            <button type="submit" class="btn btn-primary">Salvar Veículo</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Cars List -->
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Veículo</th>
+                            <th>Placa</th>
+                            <th>Status</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for car in cars %}
+                        <tr>
+                            <td>{{ car.id }}</td>
+                            <td>
+                                <div class="flex items-center gap-sm">
+                                    <img src="{{ car.image_url }}"
+                                        style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
+                                    {{ car.brand }} {{ car.model }}
+                                </div>
+                            </td>
+                            <td>{{ car.plate or '-' }}</td>
+                            <td>
+                                <span
+                                    style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; 
+                                    background: {% if car.status == 'available' %}#dcfce7{% elif car.status == 'rented' %}#dbeafe{% else %}#fee2e2{% endif %};
+                                    color: {% if car.status == 'available' %}#166534{% elif car.status == 'rented' %}#1e40af{% else %}#991b1b{% endif %};">
+                                    {{ car.status }}
+                                </span>
+                            </td>
+                            <td>R$ {{ car.price_per_day }}</td>
+                            <td>
+                                <div class="flex gap-sm">
+                                    {% if car.status != 'maintenance' %}
+                                    <a href="{{ url_for('admin_car_status', id=car.id, status='maintenance') }}"
+                                        class="btn btn-sm btn-outline" title="Colocar em manutenção">🔧</a>
+                                    {% else %}
+                                    <a href="{{ url_for('admin_car_status', id=car.id, status='available') }}"
+                                        class="btn btn-sm btn-outline" title="Disponibilizar">✅</a>
+                                    {% endif %}
+                                    <a href="{{ url_for('admin_delete_car', id=car.id) }}" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Excluir este veículo?')">🗑️</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+{% endblock %}

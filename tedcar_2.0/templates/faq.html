@@ -1,23 +1,31 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container">
+    <h2 class="mb-lg text-center">Perguntas Frequentes</h2>
 
-<h1 style="color:var(--primary-color);">Perguntas Frequentes</h1>
+    <div class="grid gap-md" style="max-width: 800px; margin: 0 auto;">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Como funciona o aluguel?</h3>
+                <p class="card-text">Escolha o carro, selecione as datas e confirme a reserva. Regras de retirada e
+                    devolução constam no contrato.</p>
+            </div>
+        </div>
 
-<div style="margin-top:12px;">
-    <div class="card">
-        <h3>Como funciona o aluguel?</h3>
-        <p>Escolha o carro, selecione as datas e confirme a reserva. Regras de retirada e devolução constam no contrato.</p>
-    </div>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Posso cancelar?</h3>
+                <p class="card-text">Sim — desde que com antecedência mínima de 24 horas.</p>
+            </div>
+        </div>
 
-    <div class="card">
-        <h3>Posso cancelar?</h3>
-        <p>Sim — desde que com antecedência mínima de 24 horas.</p>
-    </div>
-
-    <div class="card">
-        <h3>Quais documentos são necessários?</h3>
-        <p>CNH válida e documento com foto.</p>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Quais documentos são necessários?</h3>
+                <p class="card-text">CNH válida e documento com foto.</p>
+            </div>
+        </div>
     </div>
 </div>
-
 {% endblock %}

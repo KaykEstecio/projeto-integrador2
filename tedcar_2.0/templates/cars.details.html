@@ -1,38 +1,16 @@
-{% extends "base.html" %}
-{% block content %}
+<h3 style="color:var(--text-color);">Escolha datas</h3>
 
-<div style="display:flex; gap:30px; align-items:flex-start; flex-wrap:wrap;">
-    <div style="flex:1; min-width:300px;">
-        <img src="{{ car.image_url }}" style="width:100%; border-radius:12px; object-fit:cover; height:320px;">
-    </div>
+<form method="POST" action="{{ url_for('reserve', car_id=car.id) }}">
+    <label style="color:var(--text-color);">Início</label><br>
+    <input type="date" name="start_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
+    <label style="color:var(--text-color);">Fim</label><br>
+    <input type="date" name="end_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
 
-    <div style="flex:1; min-width:320px;">
-        <h1 style="color:var(--primary-color);">{{ car.brand }} {{ car.model }}</h1>
-        <p style="color:var(--accent-color); font-weight:700; margin-top:8px;">R$ {{ car.price_per_day }} / dia</p>
+    <button class="btn" type="submit" style="width:auto;">Reservar</button>
+</form>
+</div>
 
-        <div style="margin-top:18px; background: rgba(255,255,255,0.02); padding:14px; border-radius:8px;">
-            <p><strong>Especificações:</strong></p>
-            <ul>
-                <li>Transmissão: Automática / Manual (varia por modelo)</li>
-                <li>Combustível: Gasolina</li>
-                <li>Assentos: 5</li>
-            </ul>
-        </div>
-
-        <div style="margin-top:18px;">
-            <h3 style="color:var(--text-color);">Escolha datas</h3>
-
-            <form method="POST" action="{{ url_for('reserve', car_id=car.id) }}">
-                <label style="color:var(--text-color);">Início</label><br>
-                <input type="date" name="start_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
-                <label style="color:var(--text-color);">Fim</label><br>
-                <input type="date" name="end_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
-
-                <button class="btn" type="submit" style="width:auto;">Reservar</button>
-            </form>
-        </div>
-
-    </div>
+</div>
 </div>
 
 {% endblock %}

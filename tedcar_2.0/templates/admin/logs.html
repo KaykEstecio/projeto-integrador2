@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="grid" style="grid-template-columns: 250px 1fr; gap: var(--spacing-xl);">
+
+        <!-- Sidebar -->
+        <div class="card" style="height: fit-content;">
+            <div class="card-body">
+                <h3 class="card-title mb-md">Menu Admin</h3>
+                <nav style="display: flex; flex-direction: column; gap: 10px;">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline w-full text-left">Dashboard</a>
+                    <a href="{{ url_for('admin_cars') }}" class="btn btn-outline w-full text-left">Veículos</a>
+                    <a href="{{ url_for('admin_users') }}" class="btn btn-outline w-full text-left">Usuários</a>
+                    <a href="{{ url_for('admin_rentals') }}" class="btn btn-outline w-full text-left">Locações</a>
+                    <a href="{{ url_for('admin_logs') }}" class="btn btn-primary w-full text-left">Logs</a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div>
+            <h2 class="mb-md">Logs do Sistema</h2>
+
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data/Hora</th>
+                            <th>Admin</th>
+                            <th>Ação</th>
+                            <th>Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td>{{ log.timestamp.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                            <td><strong>{{ log.admin_id }}</strong></td>
+                            <td>{{ log.action }}</td>
+                            <td>{{ log.details or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

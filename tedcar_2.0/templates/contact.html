@@ -1,29 +1,38 @@
 {% extends "base.html" %}
+
 {% block content %}
+<div class="container">
+    <div class="auth-container" style="max-width: 600px;">
+        <h2 class="auth-title">Entre em Contato</h2>
 
-<h1 style="color:var(--primary-color);">Contato</h1>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
 
-<div style="max-width:700px; margin-top:12px;">
-    <div class="card">
         <form method="POST" action="{{ url_for('contact') }}">
-            <div class="input-group">
-                <label>Nome</label>
-                <input type="text" name="name" required>
+            <div class="form-group">
+                <label class="form-label">Nome</label>
+                <input type="text" name="name" class="form-control" required>
             </div>
 
-            <div class="input-group">
-                <label>E-mail</label>
-                <input type="email" name="email" required>
+            <div class="form-group">
+                <label class="form-label">E-mail</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
 
-            <div class="input-group">
-                <label>Mensagem</label>
-                <textarea name="message" rows="5" style="width:100%; padding:10px; border-radius:8px;"></textarea>
+            <div class="form-group">
+                <label class="form-label">Mensagem</label>
+                <textarea name="message" rows="5" class="form-control" required></textarea>
             </div>
 
-            <button class="btn" type="submit">Enviar mensagem</button>
+            <button class="btn btn-primary w-full" type="submit">Enviar Mensagem</button>
         </form>
     </div>
 </div>
-
 {% endblock %}

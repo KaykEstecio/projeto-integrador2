@@ -1,21 +1,23 @@
-<nav>
-    <div class="logo">TedCar</div>
+<nav class="navbar">
+    <div class="container nav-container">
+        <a href="{{ url_for('index') }}" class="nav-logo">Ted<span>Car</span></a>
 
-    <div class="nav-links">
-        <a href="{{ url_for('index') }}">Início</a>
-        <a href="{{ url_for('cars') }}">Carros</a>
-        <a href="{{ url_for('faq') }}">FAQ</a>
-        <a href="{{ url_for('contact') }}">Contato</a>
+        <div class="nav-menu">
+            <a href="{{ url_for('index') }}" class="nav-link">Início</a>
+            <a href="{{ url_for('cars') }}" class="nav-link">Carros</a>
+            <a href="{{ url_for('faq') }}" class="nav-link">FAQ</a>
+            <a href="{{ url_for('contact') }}" class="nav-link">Contato</a>
 
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('my_reservations') }}">Minhas Reservas</a>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('my_reservations') }}" class="nav-link">Minhas Reservas</a>
             {% if current_user.is_admin %}
-                <a href="{{ url_for('admin_dashboard') }}" style="color: var(--accent-color);">Admin</a>
+            <a href="{{ url_for('admin_dashboard') }}" class="nav-link" style="color: var(--accent-color);">Admin</a>
             {% endif %}
-            <a href="{{ url_for('logout') }}" style="color: #ff6b6b;">Sair</a>
-        {% else %}
-            <a href="{{ url_for('login') }}">Entrar</a>
-            <a href="{{ url_for('register') }}">Registrar</a>
-        {% endif %}
+            <a href="{{ url_for('logout') }}" class="btn btn-sm btn-outline">Sair</a>
+            {% else %}
+            <a href="{{ url_for('login') }}" class="nav-link">Entrar</a>
+            <a href="{{ url_for('register') }}" class="btn btn-sm btn-primary">Registrar</a>
+            {% endif %}
+        </div>
     </div>
 </nav>

@@ -1,21 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="form-box animate-float">
-    <h2>Login</h2>
-    <form method="POST" action="{{ url_for('login') }}">
-        <div class="input-group">
-            <label for="username">Usuário</label>
-            <input type="text" id="username" name="username" required>
+<div class="auth-container">
+    <h2 class="auth-title">Login</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <div class="form-group">
+            <label class="form-label">Usuário</label>
+            <input type="text" name="username" class="form-control" required>
         </div>
-        <div class="input-group">
-            <label for="password">Senha</label>
-            <input type="password" id="password" name="password" required>
+        <div class="form-group">
+            <label class="form-label">Senha</label>
+            <input type="password" name="password" class="form-control" required>
         </div>
-        <button type="submit" class="btn">Entrar</button>
+        <button type="submit" class="btn btn-primary w-full">Entrar</button>
     </form>
-    <p style="margin-top: 1rem; text-align: center;">
-        Não tem conta? <a href="{{ url_for('register') }}" style="color: var(--primary-color);">Cadastre-se</a>
+
+    <p class="text-center mt-md">
+        Não tem conta? <a href="{{ url_for('register') }}">Registre-se</a>
     </p>
 </div>
 {% endblock %}
