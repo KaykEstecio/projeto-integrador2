@@ -1,16 +1,77 @@
-<h3 style="color:var(--text-color);">Escolha datas</h3>
+{% extends 'base.html' %}
 
-<form method="POST" action="{{ url_for('reserve', car_id=car.id) }}">
-    <label style="color:var(--text-color);">Início</label><br>
-    <input type="date" name="start_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
-    <label style="color:var(--text-color);">Fim</label><br>
-    <input type="date" name="end_date" required style="padding:8px; border-radius:6px; margin-bottom:8px;"><br>
+{% block content %}
+<div class="container">
+    <div class="card mt-lg">
+        <div class="card-body">
+            <div class="grid grid-2" style="gap: var(--spacing-xl);">
+                <!-- Car Image -->
+                <div style="height: 400px; overflow: hidden; border-radius: var(--radius-md);">
+                    <img src="{{ car.image_url }}" alt="{{ car.brand }} {{ car.model }}"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
 
-    <button class="btn" type="submit" style="width:auto;">Reservar</button>
-</form>
+                <!-- Details & Reservation -->
+                <div class="flex flex-col justify-center">
+                    <h2 class="mb-sm">{{ car.brand }} {{ car.model }}</h2>
+
+                    <div class="mb-md">
+                        <span style="font-size: 1.5rem; font-weight: 700; color: var(--secondary-color);">
+                            R$ {{ car.price_per_day }}
+                        </span>
+                        <span class="text-light">/ dia</span>
+                    </div>
+
+                    <div class="grid grid-2 mb-lg" style="gap: var(--spacing-md);">
+                        <div class="card" style="background: var(--bg-color); border: none;">
+                            <div class="card-body" style="padding: var(--spacing-sm);">
+                                <p class="text-light" style="font-size: 0.9rem;">Ano</p>
+                                <p style="font-weight: 600;">{{ car.year or 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="card" style="background: var(--bg-color); border: none;">
+                            <div class="card-body" style="padding: var(--spacing-sm);">
+                                <p class="text-light" style="font-size: 0.9rem;">Placa</p>
+                                <p style="font-weight: 600;">{{ car.plate or 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="card" style="background: var(--bg-color); border: none;">
+                            <div class="card-body" style="padding: var(--spacing-sm);">
+                                <p class="text-light" style="font-size: 0.9rem;">Quilometragem</p>
+                                <p style="font-weight: 600;">{{ car.km or 0 }} km</p>
+                            </div>
+                        </div>
+                        <div class="card" style="background: var(--bg-color); border: none;">
+                            <div class="card-body" style="padding: var(--spacing-sm);">
+                                <p class="text-light" style="font-size: 0.9rem;">Status</p>
+                                <p
+                                    style="font-weight: 600; color: {% if car.status == 'available' %}var(--success-color){% else %}var(--danger-color){% endif %};">
+                                    {{ car.status|upper }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="mb-sm">Reservar Agora</h3>
+                    <form method="POST" action="{{ url_for('reserve', car_id=car.id) }}" class="card"
+                        style="background: var(--bg-color); border: none;">
+                        <div class="card-body">
+                            <div class="grid grid-2 gap-sm mb-md">
+                                <div class="form-group mb-0">
+                                    <label class="form-label">Data Início</label>
+                                    <input type="date" name="start_date" class="form-control" required>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label class="form-label">Data Fim</label>
+                                    <input type="date" name="end_date" class="form-control" required>
+                                </div>
+                            </div>
+                            <button class="btn btn-details-reserve w-full" type="submit">Confirmar Reserva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
-</div>
-</div>
-
 {% endblock %}
